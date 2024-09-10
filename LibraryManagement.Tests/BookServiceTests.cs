@@ -36,52 +36,52 @@ namespace LibraryManagement.Tests
             Assert.Equal(dueDate, book.DueDate);
         }
 
-        //[Fact]
-        //public void ReturnBook_ShouldClearDueDate()
-        //{
-        //    // Arrange
-        //    var bookId = 1;
-        //    var book = new Book { Id = bookId, Title = "Test Book", DueDate = DateTime.Now.AddDays(7) };
-        //    _mockBookRepository.Setup(repo => repo.Get(bookId)).Returns(book);
+        [Fact]
+        public void ReturnBook_ShouldClearDueDate()
+        {
+            // Arrange
+            var bookId = 1;
+            var book = new Book { Id = bookId, Title = "Test Book", DueDate = DateTime.Now.AddDays(7) };
+            _mockBookRepository.Setup(repo => repo.Get(bookId)).Returns(book);
 
-        //    // Act
-        //    _bookService.ReturnBook(bookId);
+            // Act
+            _bookService.ReturnBook(bookId);
 
-        //    // Assert
-        //    Assert.False(book.IsCheckedOut);
-        //    Assert.Null(book.DueDate);
-        //}
+            // Assert
+            Assert.False(book.IsCheckedOut);
+            Assert.Null(book.DueDate);
+        }
 
-        //[Fact]
-        //public void GetOverdueBooks_ShouldReturnOverdueBooks()
-        //{
-        //    // Arrange
-        //    var currentDate = DateTime.Now;
-        //    var overdueBook = new Book { Id = 1, DueDate = currentDate.AddDays(-1) };
-        //    var notOverdueBook = new Book { Id = 2, DueDate = currentDate.AddDays(1) };
-        //    _mockBookRepository.Setup(repo => repo.GetAll()).Returns(new List<Book> { overdueBook, notOverdueBook });
+        [Fact]
+        public void GetOverdueBooks_ShouldReturnOverdueBooks()
+        {
+            // Arrange
+            var currentDate = DateTime.Now;
+            var overdueBook = new Book { Id = 1, DueDate = currentDate.AddDays(-1) ,IsCheckedOut = true };
+            var notOverdueBook = new Book { Id = 2, DueDate = currentDate.AddDays(1) , IsCheckedOut = true };
+            _mockBookRepository.Setup(repo => repo.GetAll()).Returns(new List<Book> { overdueBook, notOverdueBook });
 
-        //    // Act
-        //    var result = _bookService.GetOverdueBooks(currentDate);
+            // Act
+            var result = _bookService.GetOverdueBooks(currentDate);
 
-        //    // Assert
-        //    Assert.Contains(overdueBook, result);
-        //    Assert.DoesNotContain(notOverdueBook, result);
-        //}
+            // Assert
+            Assert.Contains(overdueBook, result);
+            Assert.DoesNotContain(notOverdueBook, result);
+        }
 
-        //[Fact]
-        //public void CalculateLateFees_ShouldReturnCorrectAmount()
-        //{
-        //    // Arrange
-        //    var book = new Book { Id = 1, DueDate = DateTime.Now.AddDays(-5) };
-        //    var currentDate = DateTime.Now;
-        //    var expectedLateFee = 5 * BookService.LateFeePerDay; // Assuming $1 per day
+        [Fact]
+        public void CalculateLateFees_ShouldReturnCorrectAmount()
+        {
+            // Arrange
+            var book = new Book { Id = 1, DueDate = DateTime.Now.AddDays(-5), IsCheckedOut=true };
+            var currentDate = DateTime.Now;
+            var expectedLateFee = 5 * BookService.LateFeePerDay; // Assuming $1 per day
 
-        //    // Act
-        //    var result = _bookService.CalculateLateFees(book, currentDate);
+            // Act
+            var result = _bookService.CalculateLateFees(book, currentDate);
 
-        //    // Assert
-        //    Assert.Equal(expectedLateFee, result);
-        //}
+            // Assert
+            Assert.Equal(expectedLateFee, result);
+        }
     }
 }

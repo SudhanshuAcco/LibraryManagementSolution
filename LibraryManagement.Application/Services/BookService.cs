@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagement.Application.Services
 {
-    public class BookService
+    public class BookService: IBookService
     {
         private readonly IBookRepository _bookRepository;
         public const decimal LateFeePerDay = 0.5m;
@@ -42,7 +42,7 @@ namespace LibraryManagement.Application.Services
             _bookRepository.Add(book);
         }
 
-        private decimal CalculateLateFee(DateTime? dueDate, DateTime returnDate)
+        public decimal CalculateLateFee(DateTime? dueDate, DateTime returnDate)
         {
             if (!dueDate.HasValue || returnDate <= dueDate.Value)
                 return 0;

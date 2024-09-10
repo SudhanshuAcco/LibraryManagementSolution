@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<BookService>();
 builder.Services.AddSingleton<IBookRepository, InMemoryBookRepository>();
-
+builder.Services.AddSingleton<IBookService, BookService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

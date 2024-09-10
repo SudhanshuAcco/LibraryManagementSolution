@@ -1,0 +1,2 @@
+10-09-2024 14:31:38: NullReferenceException - The book object is null.
+10-09-2024 16:04:20: ArgumentException - Id must be a positive integer. (Parameter 'Id')

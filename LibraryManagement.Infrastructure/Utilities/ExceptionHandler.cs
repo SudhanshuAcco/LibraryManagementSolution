@@ -16,30 +16,45 @@ namespace LibraryManagement.Infrastructure.Utilities
             Console.WriteLine($"Message: {ex.Message}");
             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
 
-            // Determine the status code based on exception type
+            // Determine the status code based on exception type          
+
             int statusCode;
 
-            if (ex is DivideByZeroException) {
+            switch (ex) {
+            case DivideByZeroException _:
                 Console.WriteLine("A divide by zero exception occurred.");
                 statusCode = 500; // Internal Server Error
-            } else if (ex is NullReferenceException) {
+                break;
+
+            case NullReferenceException _:
                 Console.WriteLine("A null reference exception occurred.");
                 statusCode = 400; // Bad Request
-            } else if (ex is FileNotFoundException) {
+                break;
+
+            case FileNotFoundException _:
                 Console.WriteLine("A file not found exception occurred.");
                 statusCode = 404; // Not Found
-            } else if (ex is ArgumentException) {
+                break;
+
+            case ArgumentException _:
                 Console.WriteLine("An argument exception occurred.");
                 statusCode = 400; // Bad Request
-            } else if (ex is KeyNotFoundException) {
+                break;
+
+            case KeyNotFoundException _:
                 Console.WriteLine("A key not found exception occurred.");
                 statusCode = 404; // Not Found
-            } else if (ex is InvalidOperationException) {
+                break;
+
+            case InvalidOperationException _:
                 Console.WriteLine("An invalid operation exception occurred.");
                 statusCode = 400; // Bad Request
-            } else {
+                break;
+
+            default:
                 Console.WriteLine("An unknown exception occurred.");
                 statusCode = 500; // Internal Server Error
+                break;
             }
 
             // Log exception details to a file

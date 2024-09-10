@@ -104,21 +104,6 @@ namespace LibraryManagement.Tests
         }
 
         [Fact]
-        public void RemoveBook_ShouldReturnNoContent_WhenSuccessful()
-        {
-            // Arrange
-            int bookId = 1;
-            _mockBookService.Setup(service => service.RemoveBook(bookId)).Verifiable();
-
-            // Act
-            var result = _bookscontroller.RemoveBook(bookId);
-
-            // Assert
-            var actionResult = Assert.IsType<NoContentResult>(result);
-            _mockBookService.Verify();
-        }
-
-        [Fact]
         public void GetOverdueBooks_ShouldReturnOkWithBooks_WhenSuccessful()
         {
             // Arrange
@@ -155,9 +140,26 @@ namespace LibraryManagement.Tests
 
             Assert.NotNull(returnValue);        
 
-        }
+        }  
+              
 
-     
+        [Fact]
+        public void CheckOutBook_ShouldReturnStatusCode500_WhenDivideByZeroExceptionOccurs()
+        {
+            // Arrange
+            int bookId = 1;
+            DateTime dueDate = DateTime.UtcNow.AddDays(7);
+            _mockBookService.Setup(service => service.CheckOutBook(bookId, dueDate))
+                            .Throws(new DivideByZeroException());
+
+            // Act
+            var result = _bookscontroller.CheckOutBook(bookId, dueDate);
+
+            // Assert
+            var actionResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(500, actionResult.StatusCode);
+            Assert.Equal("Attempted to divide by zero.", actionResult.Value);
+        }
 
         [Fact]
         public void SearchBooks_ShouldReturnOkWithBooks_WhenSuccessful()
@@ -174,6 +176,39 @@ namespace LibraryManagement.Tests
             var actionResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsAssignableFrom<IEnumerable<Book>>(actionResult.Value);
             Assert.Single(returnValue);
+        }
+
+        [Fact]
+        public void CheckOutBook_ShouldReturnStatusCode400_WhenArgumentExceptionOccurs()
+        {
+            // Arrange
+            int bookId = 1;
+            DateTime dueDate = DateTime.UtcNow.AddDays(7);
+            _mockBookService.Setup(service => service.CheckOutBook(bookId, dueDate))
+                            .Throws(new ArgumentException());
+
+            // Act
+            var result = _bookscontroller.CheckOutBook(bookId, dueDate);
+
+            // Assert
+            var actionResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(400, actionResult.StatusCode);
+            Assert.Equal("Value does not fall within the expected range.", actionResult.Value);
+        }
+
+        [Fact]
+        public void RemoveBook_ShouldReturnNoContent_WhenSuccessful()
+        {
+            // Arrange
+            int bookId = 1;
+            _mockBookService.Setup(service => service.RemoveBook(bookId)).Verifiable();
+
+            // Act
+            var result = _bookscontroller.RemoveBook(bookId);
+
+            // Assert
+            var actionResult = Assert.IsType<NoContentResult>(result);
+            _mockBookService.Verify();
         }
 
 

@@ -83,5 +83,33 @@ namespace LibraryManagement.Tests
             // Assert
             Assert.Equal(expectedLateFee, result);
         }
+
+        [Fact]
+        public void CalculateLateFee_ShouldReturnZero_WhenDueDateIsNull()
+        {
+            // Arrange
+            DateTime? dueDate = null;
+            DateTime returnDate = DateTime.UtcNow;
+
+            // Act
+            var result = _bookService.CalculateLateFee(dueDate, returnDate);
+
+            // Assert
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public void CalculateLateFee_ShouldReturnZero_WhenReturnDateIsBeforeOrOnDueDate()
+        {
+            // Arrange
+            var dueDate = DateTime.UtcNow.AddDays(-5);
+            var returnDate = DateTime.UtcNow.AddDays(-5); // Same day as dueDate
+
+            // Act
+            var result = _bookService.CalculateLateFee(dueDate, returnDate);
+
+            // Assert
+            Assert.Equal(0, result);
+        }
     }
 }

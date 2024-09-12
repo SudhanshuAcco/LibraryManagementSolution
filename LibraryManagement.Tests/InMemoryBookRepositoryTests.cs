@@ -8,6 +8,17 @@ using System.Threading.Tasks;
 
 namespace LibraryManagement.Tests
 {
+    
+    /// <summary>
+    /// noticed that every test  sets up the books it needs.    What happens if we update the book object
+    /// by adding additonal fields?   You now have to update every test instead of having some reusable
+    /// utility for this.
+    ///
+    /// I am also noticing the same pattern of assertions in most tests.  copy/paste likely is how they were created.
+    /// If we are trying to reuse code, is there not a way to create a function to contain all these assertions
+    /// and call them from multiple tests?
+    /// 
+    /// </summary>
     public class InMemoryBookRepositoryTests
     {
         private readonly InMemoryBookRepository _repository;
@@ -42,6 +53,11 @@ namespace LibraryManagement.Tests
             _repository.Add(book1);
             var book2 = new Book { Id = 1, Title = "New Title", Author = "New Author" };
 
+            //honestly this likely should throw an error since you are effectivly replacing an existing object.
+            //that though is more of a business decision.
+            // for the purposes of this exercise I would expect that you do NOT allow books to be overwritten on an add
+            // that would be an update to an existing book.
+            
             // Act
             _repository.Add(book2);
 

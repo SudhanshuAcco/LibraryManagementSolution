@@ -5,6 +5,8 @@ using LibraryManagement.Application.Services;
 using LibraryManagement.Domain.Models;
 using LibraryManagement.Infrastructure.Utilities;
 
+//Nutrien is very picky about having unused 'usings'..  it is minor though...
+
 namespace LibraryManagement.API.Controllers
 {
     [ApiController]
@@ -16,7 +18,6 @@ namespace LibraryManagement.API.Controllers
         public BooksController(IBookService bookService)
         {
             _bookService = bookService ?? throw new ArgumentNullException(nameof(bookService));
-            
         }
 
         [HttpPost("{bookId}/checkout")]

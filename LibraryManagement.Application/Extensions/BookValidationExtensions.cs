@@ -6,12 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// clean up these using.  Nutrien expects this.   
+
 namespace LibraryManagement.Application.Extensions
 {
     public static class BookValidationExtensions
     {
         public static void Validate(this Book book, ValidationType validationType)
         {
+            // why aren't these methods on the static ValidationHelper class not method extensions?
+            // provides a much cleaner interface
             ValidationHelper.IsNotNull(book, nameof(book));
             ValidationHelper.IsPositive(book.Id, nameof(book.Id));
             ValidationHelper.IsNotEmpty(book.Title, nameof(book.Title));
@@ -24,6 +28,13 @@ namespace LibraryManagement.Application.Extensions
                 }
             }
 
+            //
+            // I see no reason why we need this.  could you not have had other validation methods depending on
+            // the action being performed?  
+            // too much conditional logic 
+            //
+            //  A validator is allowed to have more than a single method.  
+            //
             switch (validationType) {
             case ValidationType.CheckOut:
                 if (book.IsCheckedOut)

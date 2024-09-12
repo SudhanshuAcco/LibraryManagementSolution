@@ -15,6 +15,7 @@ namespace LibraryManagement.Application.Services
         private readonly IBookRepository _bookRepository;
         public const decimal LateFeePerDay = 0.5m;
 
+        //unnecessary blank line.  it is minor, but Nutrien will ask for this to be fixed.
         public BookService(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository ?? throw new ArgumentNullException(nameof(bookRepository));
@@ -23,6 +24,11 @@ namespace LibraryManagement.Application.Services
 
         public void CheckOutBook(int bookId, DateTime dueDate)
         {
+            // 
+            // the reposntory should contain the logic and throw this exception instead of forcing all its
+            // consumers to check and throw it.   
+            //
+            
             var book = _bookRepository.Get(bookId) ?? throw new KeyNotFoundException($"Book with ID {bookId} not found.");
             book.Validate(BookValidationExtensions.ValidationType.CheckOut);
            

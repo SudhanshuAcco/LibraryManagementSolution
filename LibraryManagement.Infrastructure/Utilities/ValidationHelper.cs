@@ -6,14 +6,23 @@ using System.Threading.Tasks;
 
 namespace LibraryManagement.Infrastructure.Utilities
 {
+    /// <summary>
+    ///  If this is a helper class intended to support the entire application it should be using generics.
+    /// </summary>
     public static class ValidationHelper
     {
+        /// <summary>
+        /// Why is this an object,  it should be type-safe by using generics
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="paramName"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void IsNotNull(object value, string paramName)
         {
             if (value == null)
                 throw new ArgumentNullException(paramName, $"{paramName} cannot be null.");
         }
-
+        
         public static void IsNotEmpty(string value, string paramName)
         {
             if (string.IsNullOrWhiteSpace(value))

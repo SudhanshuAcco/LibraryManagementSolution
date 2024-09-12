@@ -8,6 +8,7 @@ using System.Text.Json;
 
 namespace LibraryManagement.Infrastructure.Middleware
 {
+    // typically when throwing an exception 
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
@@ -22,6 +23,11 @@ namespace LibraryManagement.Infrastructure.Middleware
             try {
                 await _next(context);
             } catch (Exception ex) {
+                
+                // I think this sould be moved into a place that can be reused.
+                // if continue to build this, are you going to copy/paste this code every time 
+                // you need to implement exception hanlding logic?
+                
                 int statusCode = StatusCodeHelper.GetStatusCodeForException(ex);
                 context.Response.StatusCode = statusCode;
                 context.Response.ContentType = "application/json";

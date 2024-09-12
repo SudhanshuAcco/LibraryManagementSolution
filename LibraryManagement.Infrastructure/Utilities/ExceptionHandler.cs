@@ -9,6 +9,11 @@ namespace LibraryManagement.Infrastructure.Utilities
     public class ExceptionHandler
     {
         // This method will handle the exceptions globally
+        /// <summary>
+        /// this method is over 50 lines long.  already violating most static code analysis tools.
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
         public static int HandleException(Exception ex)
         {
             // Log the exception to the console (or file, database, etc.)
@@ -19,6 +24,11 @@ namespace LibraryManagement.Infrastructure.Utilities
             // Determine the status code based on exception type          
 
             int statusCode;
+            
+            // this is not how I would have handled messages based on providing a friendly message
+            // by excetion type.   
+            // Imagine you have a system that throws over 50 - 100 unique exceptions?
+            //
 
             switch (ex) {
             case DivideByZeroException _:

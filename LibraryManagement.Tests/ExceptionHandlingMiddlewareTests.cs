@@ -21,13 +21,18 @@ namespace LibraryManagement.Tests
             var statusCode = 400; // Example status code for the exception
 
             var mockRequestDelegate = new Mock<RequestDelegate>();
+            
+            // there is never a reason to use this:  It.IsAny<HttpContext>()
+            // YOU are setting up the mock,  you should know what you are passing to it.
+            
             mockRequestDelegate
                 .Setup(rd => rd(It.IsAny<HttpContext>()))
                 .Throws(exception);
 
             var middleware = new ExceptionHandlingMiddleware(mockRequestDelegate.Object);
             var originalResponseBody = context.Response.Body;
-
+            // you have assigned this local variable but are not using it?  
+            
             using var newResponseBody = new MemoryStream();
             context.Response.Body = newResponseBody;
 
@@ -48,6 +53,7 @@ namespace LibraryManagement.Tests
             
             var actualResponse = JsonConvert.DeserializeObject<responseMsg>(responseBody);
 
+            // casting is not necessary here.  
             Assert.Equal(expectedResponse.message, (string) actualResponse.message);
             Assert.Equal(expectedResponse.statusCode, (int) actualResponse.statusCode);
         }

@@ -13,7 +13,16 @@ using LibraryManagement.Domain.Models;
 
 namespace LibraryManagement.Tests
 {
-    public class BooksControllerTests
+    /// <summary>
+    /// it is not a best practice to have the mock verify calls in the actual test method/
+    /// what happens if there is an error/exception that occurs before verify is called?
+    /// the mock.verifyAll() should always be called even if the test method fails unexpectedly.
+    ///
+    /// most tests likely have more than one setup of a mock,  if you don't know which setup method worked
+    /// you have to use a debugger to debug your unit tests.
+    /// may as well not have written the unit tests in the first place.
+    /// </summary>
+    public class BooksControllerTests : IDisposable
     {
         private readonly BooksController _bookscontroller;
         private readonly Mock<IBookService> _mockBookService;
@@ -23,6 +32,8 @@ namespace LibraryManagement.Tests
             _mockBookService = new Mock<IBookService>();
             _bookscontroller = new BooksController(_mockBookService.Object);
         }
+
+        public void Dispose() => _mockBookService.VerifyAll();
 
         [Fact]
         public void CheckOutBook_ShouldReturnOk_WhenSuccessful()

@@ -22,7 +22,7 @@ namespace LibraryManagement.Infrastructure.Middleware
             try {
                 await _next(context);
             } catch (Exception ex) {
-                int statusCode = StatusCodeHelper.GetStatusCodeForException(ex);
+                int statusCode = StatusCodeHelper.GetStatusCode(ex);
                 context.Response.StatusCode = statusCode;
                 context.Response.ContentType = "application/json";
 

@@ -2,3 +2,7 @@
 10-09-2024 16:04:20: ArgumentException - Id must be a positive integer. (Parameter 'Id')
 10-09-2024 17:30:19: InvalidOperationException - Unable to resolve service for type 'LibraryManagement.Application.Services.IBookService' while attempting to activate 'LibraryManagement.API.Controllers.BooksController'.
 10-09-2024 17:30:55: InvalidOperationException - Unable to resolve service for type 'LibraryManagement.Application.Services.IBookService' while attempting to activate 'LibraryManagement.API.Controllers.BooksController'.
+2024-09-16 7:49:51 AM: ArgumentException - Id must be a positive integer. (Parameter 'Id')
+2024-09-16 7:50:13 AM: KeyNotFoundException - Book with ID 0 not found.
+2024-09-16 7:50:40 AM: InvalidOperationException - Book is already checked out.
+2024-09-16 7:50:46 AM: InvalidOperationException - Book is already checked out.

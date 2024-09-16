@@ -1,9 +1,4 @@
 ﻿using LibraryManagement.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryManagement.Application.Services
 {
@@ -11,7 +6,6 @@ namespace LibraryManagement.Application.Services
     {
         void CheckOutBook(int bookId, DateTime dueDate);
         void ReturnBook(int bookId);
-        decimal CalculateLateFee(DateTime? dueDate, DateTime returnDate);
         IEnumerable<Book> GetCheckedOutBooks();
         void AddBook(Book book);
 

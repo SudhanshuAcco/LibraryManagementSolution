@@ -1,3 +1,4 @@
+using LibraryManagement.Application;
 using LibraryManagement.Application.Services;
 using LibraryManagement.Domain.Interfaces;
 using LibraryManagement.Infrastructure.InMemory;
@@ -11,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<BookService>();
 builder.Services.AddSingleton<IBookRepository, InMemoryBookRepository>();
+builder.Services.AddSingleton<ILateFeeCalculator, LateFeeCalculator>();
 builder.Services.AddSingleton<IBookService, BookService>();
 var app = builder.Build();
 

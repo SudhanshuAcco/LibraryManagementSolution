@@ -26,7 +26,13 @@ namespace LibraryManagement.Infrastructure.InMemory
             }
         }
 
-        public Book Get(int bookId) => _books.SingleOrDefault(b => b.Id == bookId);
+        public Book Get(int bookId)
+        {
+            var found = _books.SingleOrDefault(b => b.Id == bookId);
+            if (found == null)
+                throw new KeyNotFoundException($"Book with ID {bookId} not found.");
+            return found;
+        }
 
         public IEnumerable<Book> GetAll() => _books;
 

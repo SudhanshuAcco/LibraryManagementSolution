@@ -1,37 +1,34 @@
-﻿using Moq;
-using Xunit;
+﻿using LibraryManagement.Application;
+using Moq;
 using LibraryManagement.Application.Services;
 using LibraryManagement.Domain.Interfaces;
 using LibraryManagement.Domain.Models;
-using System;
-using System.Collections.Generic;
 
 namespace LibraryManagement.Tests
 {
-    public class BookServiceTests
+    public class BookServiceTests : BaseMockTest
     {
-        private readonly Mock<IBookRepository> _mockBookRepository;
-        private readonly BookService _bookService;
+        private readonly Mock<IBookRepository> bookRepository;
+        private readonly Mock<ILateFeeCalculator> lateFeeCalcutor;
+        private readonly BookService bookService;
 
         public BookServiceTests()
         {
-            _mockBookRepository = new Mock<IBookRepository>();
-            _bookService = new BookService(_mockBookRepository.Object);
+            lateFeeCalcutor = Strict<ILateFeeCalculator>();
+            bookRepository = Strict<IBookRepository>();
+            bookService = new BookService(bookRepository.Object, lateFeeCalcutor.Object);
         }
 
         [Fact]
         public void CheckOutBook_ShouldSetDueDate()
         {
-            // Arrange
             var bookId = 1;
             var dueDate = DateTime.Now.AddDays(7);
             var book = new Book { Id = bookId, Title = "Test Book" };
-            _mockBookRepository.Setup(repo => repo.Get(bookId)).Returns(book);
+            bookRepository.Setup(repo => repo.Get(bookId)).Returns(book);
 
-            // Act
-            _bookService.CheckOutBook(bookId, dueDate);
+            bookService.CheckOutBook(bookId, dueDate);
 
-            // Assert
             Assert.True(book.IsCheckedOut);
             Assert.Equal(dueDate, book.DueDate);
         }
@@ -39,15 +36,12 @@ namespace LibraryManagement.Tests
         [Fact]
         public void ReturnBook_ShouldClearDueDate()
         {
-            // Arrange
             var bookId = 1;
             var book = new Book { Id = bookId, Title = "Test Book", DueDate = DateTime.Now.AddDays(7) };
-            _mockBookRepository.Setup(repo => repo.Get(bookId)).Returns(book);
+            bookRepository.Setup(repo => repo.Get(bookId)).Returns(book);
 
-            // Act
-            _bookService.ReturnBook(bookId);
+            bookService.ReturnBook(bookId);
 
-            // Assert
             Assert.False(book.IsCheckedOut);
             Assert.Null(book.DueDate);
         }
@@ -55,16 +49,13 @@ namespace LibraryManagement.Tests
         [Fact]
         public void GetOverdueBooks_ShouldReturnOverdueBooks()
         {
-            // Arrange
             var currentDate = DateTime.Now;
             var overdueBook = new Book { Id = 1, DueDate = currentDate.AddDays(-1) ,IsCheckedOut = true };
             var notOverdueBook = new Book { Id = 2, DueDate = currentDate.AddDays(1) , IsCheckedOut = true };
-            _mockBookRepository.Setup(repo => repo.GetAll()).Returns(new List<Book> { overdueBook, notOverdueBook });
+            bookRepository.Setup(repo => repo.GetAll()).Returns(new List<Book> { overdueBook, notOverdueBook });
 
-            // Act
-            var result = _bookService.GetOverdueBooks(currentDate);
+            var result = bookService.GetOverdueBooks(currentDate);
 
-            // Assert
             Assert.Contains(overdueBook, result);
             Assert.DoesNotContain(notOverdueBook, result);
         }
@@ -72,44 +63,39 @@ namespace LibraryManagement.Tests
         [Fact]
         public void CalculateLateFees_ShouldReturnCorrectAmount()
         {
-            // Arrange
             var book = new Book { Id = 1, DueDate = DateTime.Now.AddDays(-5), IsCheckedOut=true };
             var currentDate = DateTime.Now;
-            var expectedLateFee = 5 * BookService.LateFeePerDay; // Assuming $1 per day
 
-            // Act
-            var result = _bookService.CalculateLateFees(book, currentDate);
+            lateFeeCalcutor.Setup(x => x.CalculateLateFee(book, currentDate)).Returns(10);
+            
+            var result = bookService.CalculateLateFees(book, currentDate);
 
-            // Assert
-            Assert.Equal(expectedLateFee, result);
+            Assert.Equal(10, result);
         }
 
+        //These tests should be on the LateFeeCalculator class. That is its sole responsbility  SOLID Principals.z  
+        /*
         [Fact]
         public void CalculateLateFee_ShouldReturnZero_WhenDueDateIsNull()
         {
-            // Arrange
             DateTime? dueDate = null;
             DateTime returnDate = DateTime.UtcNow;
 
-            // Act
-            var result = _bookService.CalculateLateFee(dueDate, returnDate);
+            var result = bookService.CalculateLateFee(dueDate, returnDate);
 
-            // Assert
             Assert.Equal(0, result);
         }
 
         [Fact]
         public void CalculateLateFee_ShouldReturnZero_WhenReturnDateIsBeforeOrOnDueDate()
         {
-            // Arrange
             var dueDate = DateTime.UtcNow.AddDays(-5);
             var returnDate = DateTime.UtcNow.AddDays(-5); // Same day as dueDate
 
-            // Act
-            var result = _bookService.CalculateLateFee(dueDate, returnDate);
+            var result = bookService.CalculateLateFee(dueDate, returnDate);
 
-            // Assert
             Assert.Equal(0, result);
         }
+        */
     }
 }
